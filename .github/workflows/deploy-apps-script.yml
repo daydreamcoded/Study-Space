@@ -29,6 +29,7 @@ jobs:
       - name: Install clasp
         run: npm install --global @google/clasp
 
+
       - name: Configure Google authorization
         env:
           CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
@@ -43,9 +44,10 @@ jobs:
             exit 1
           }
 
-          printf '%s' "$CLASPRC_JSON" > "$HOME/.clasprc.json"
           printf '%s' "$CLASPRC_JSON" | base64 --decode > "$HOME/.clasprc.json"
+          printf '%s' "$CLASP_JSON" > apps-script/.clasp.json
           chmod 600 "$HOME/.clasprc.json"
+
 
 
       - name: Push project and create version
