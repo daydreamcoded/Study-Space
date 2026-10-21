@@ -1,0 +1,19 @@
+<!-- Paste this section inside <main class="main-content">, just before </main>. -->
+<section class="view hidden" id="focusView">
+  <div class="page-heading"><div><p class="eyebrow">FIND YOUR FLOW</p><h1>Focus timer</h1><p class="subtitle">A little focused time can go a long way.</p></div></div>
+  <section class="panel focus-panel">
+    <div class="focus-mode-tabs" role="group" aria-label="Timer length"><button class="filter-tab selected" data-minutes="25" data-break="false">Focus · 25 min</button><button class="filter-tab" data-minutes="5" data-break="true">Short break · 5 min</button><button class="filter-tab" data-minutes="15" data-break="true">Long break · 15 min</button></div>
+    <div class="timer-face"><div class="timer-ring"><svg viewBox="0 0 220 220" aria-hidden="true"><circle class="timer-track" cx="110" cy="110" r="99"></circle><circle class="timer-progress" id="timerProgress" cx="110" cy="110" r="99"></circle></svg><div class="timer-readout"><span id="timerDisplay">25:00</span><small id="timerStatus">READY WHEN YOU ARE</small></div></div></div>
+    <div class="timer-controls"><button class="primary-button" id="timerStart">▶ Start focus</button><button class="secondary-button" id="timerReset">↻ Reset</button></div>
+    <p class="timer-hint">Tip: choose one task, silence distractions, and start small.</p>
+  </section>
+</section>
+<section class="view hidden" id="gradesView">
+  <div class="page-heading"><div><p class="eyebrow">KNOW WHERE YOU STAND</p><h1>Grade calculator</h1><p class="subtitle">Enter points earned and points possible for each assignment.</p></div></div>
+  <section class="panel grade-panel"><div class="panel-header"><div><h2>Your current grade</h2><p>Points-based calculation — no category weights needed.</p></div><span class="grade-result" id="gradePercent">—%</span></div>
+    <div class="grade-summary"><div><span>Total points earned</span><strong id="earnedTotal">0</strong></div><div><span>Total points possible</span><strong id="possibleTotal">0</strong></div><div><span>Letter grade</span><strong id="letterGrade">—</strong></div></div>
+    <div class="grade-table-wrap"><table class="grade-table"><thead><tr><th>Assignment</th><th>Earned</th><th>Possible</th><th></th></tr></thead><tbody id="gradeRows"></tbody></table></div>
+    <div class="grade-actions"><button class="secondary-button" id="addGradeRow">＋ Add assignment</button><button class="text-button" id="clearGrades">Clear all</button></div>
+    <p class="grade-note">Grade entries are saved in this browser separately from your assignment list.</p>
+  </section>
+</section>

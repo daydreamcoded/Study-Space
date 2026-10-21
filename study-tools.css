@@ -1,0 +1,39 @@
+
+/* Study tools add-on */
+.tools-nav-label{margin-top:25px}
+.focus-panel{padding:24px 20px 25px;max-width:680px;margin:0 auto}
+.focus-mode-tabs{display:flex;justify-content:center;gap:7px;flex-wrap:wrap}
+.focus-mode-tabs .filter-tab{border:1px solid transparent}
+.focus-mode-tabs .filter-tab.selected{border-color:#e5e2f1}
+.timer-face{display:flex;justify-content:center;padding:27px 0 23px}
+.timer-ring{width:min(66vw,280px);aspect-ratio:1;position:relative;display:grid;place-items:center}
+.timer-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.timer-track,.timer-progress{fill:none;stroke-width:7}
+.timer-track{stroke:#f0eef7}
+.timer-progress{stroke:#7770a8;stroke-linecap:round;transition:stroke-dashoffset .2s linear}
+.timer-readout{display:flex;flex-direction:column;align-items:center;gap:7px}
+.timer-readout span{font-family:Manrope,sans-serif;font-size:clamp(40px,8vw,58px);font-weight:800;letter-spacing:-2px;font-variant-numeric:tabular-nums}
+.timer-readout small{font-size:10px;letter-spacing:1.4px;color:#8e8b9c;font-weight:700}
+.timer-controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.timer-controls button{min-width:130px}
+.timer-hint,.grade-note{color:#9997a6;text-align:center;font-size:11px;margin:20px 0 0}
+.grade-panel{max-width:900px}
+.grade-result{font-family:Manrope,sans-serif;font-size:27px;font-weight:800;letter-spacing:-1px;color:var(--lav-dark);white-space:nowrap}
+.grade-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0 22px 20px}
+.grade-summary>div{background:#faf9fc;border:1px solid #f0eef6;border-radius:10px;padding:13px}
+.grade-summary span{display:block;color:#92909f;font-size:10px;margin-bottom:7px}
+.grade-summary strong{font-family:Manrope,sans-serif;font-size:20px}
+.grade-table-wrap{overflow-x:auto;border-top:1px solid var(--line)}
+.grade-table{border-collapse:collapse;width:100%;min-width:480px;text-align:left}
+.grade-table th{font-size:10px;color:#9694a4;font-weight:700;background:#faf9fc}
+.grade-table th,.grade-table td{padding:10px 12px;border-bottom:1px solid #f1f0f5}
+.grade-table th:first-child,.grade-table td:first-child{padding-left:22px}
+.grade-input{width:100%;min-width:75px;min-height:35px;border:1px solid #e7e5ef;border-radius:7px;padding:7px 9px;background:#fff;color:var(--text);outline:none;font-size:12px}
+.grade-name{min-width:150px}
+.grade-input:focus{border-color:#aaa3d1;box-shadow:0 0 0 3px #f4f2fa}
+.grade-remove{border:0;background:transparent;color:#9995a8;font-size:21px;width:30px;height:30px;border-radius:7px}
+.grade-remove:hover{background:#faeded;color:#b75c66}
+.grade-actions{display:flex;align-items:center;gap:15px;padding:17px 22px 0}
+.grade-actions .secondary-button{height:35px;font-size:11px}
+.grade-note{margin:17px 22px 20px;text-align:left}
+@media(max-width:760px){.focus-panel{padding:18px 12px}.focus-mode-tabs{gap:2px}.focus-mode-tabs .filter-tab{padding:8px 7px;font-size:10px}.grade-summary{padding:0 12px 15px;gap:7px}.grade-summary>div{padding:10px 8px}.grade-summary span{font-size:9px}.grade-summary strong{font-size:17px}.grade-table th:first-child,.grade-table td:first-child{padding-left:12px}.grade-actions{padding:14px 12px 0}.grade-note{margin:15px 12px 17px}}
