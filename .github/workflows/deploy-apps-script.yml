@@ -1,0 +1,74 @@
+
+name: Deploy StudySpace to Google Apps Script
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build Apps Script files
+        run: node scripts/build-apps-script.mjs
+
+      - name: Install clasp
+        run: npm install --global @google/clasp
+
+      - name: Configure Google authorization
+        env:
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+          CLASP_JSON: ${{ secrets.CLASP_JSON }}
+        run: |
+          test -n "$CLASPRC_JSON" || {
+            echo "Missing CLASPRC_JSON secret"
+            exit 1
+          }
+          test -n "$CLASP_JSON" || {
+            echo "Missing CLASP_JSON secret"
+            exit 1
+          }
+
+          printf '%s' "$CLASPRC_JSON" > "$HOME/.clasprc.json"
+          printf '%s' "$CLASP_JSON" > apps-script/.clasp.json
+          chmod 600 "$HOME/.clasprc.json"
+
+      - name: Push project and create version
+        working-directory: apps-script
+        run: |
+          clasp push --force
+          clasp version "GitHub commit ${GITHUB_SHA}"
+
+      - name: Deploy web app
+        working-directory: apps-script
+        env:
+          DEPLOYMENT_ID: ${{ secrets.APPS_SCRIPT_DEPLOYMENT_ID }}
+        run: |
+          VERSION=$(clasp version | tail -n 1 | awk '{print $1}')
+          if [ -z "$VERSION" ]; then
+            echo "Could not determine Apps Script version."
+            exit 1
+          fi
+
+          if [ -n "$DEPLOYMENT_ID" ]; then
+            clasp redeploy "$DEPLOYMENT_ID" "$VERSION" \
+              "StudySpace ${GITHUB_SHA}"
+          else
+            clasp deploy "$VERSION" "StudySpace initial deployment"
+            echo "Copy the new deployment ID from the output."
+            echo "Save it as the APPS_SCRIPT_DEPLOYMENT_ID secret."
+          fi
