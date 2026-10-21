@@ -63,22 +63,26 @@ jobs:
           }
           echo "APPS_SCRIPT_VERSION=$VERSION" >> "$GITHUB_ENV"
 
+   
+          - name: Deploy web app
+            working-directory: apps-script
+            env:
+              DEPLOYMENT_ID: ${{ secrets.APPS_SCRIPT_DEPLOYMENT_ID }}
+            run: |
+              set -euo pipefail
 
-      - name: Deploy web app
-        working-directory: apps-script
-        env:
-          DEPLOYMENT_ID: ${{ secrets.APPS_SCRIPT_DEPLOYMENT_ID }}
-        run: |
-          if [ -z "$APPS_SCRIPT_VERSION" ]; then
-            echo "Could not determine Apps Script version."
-            exit 1
-          fi
+              if [ -z "$APPS_SCRIPT_VERSION" ]; then
+                echo "Could not determine Apps Script version."
+                exit 1
+              fi
 
-          if [ -n "$DEPLOYMENT_ID" ]; then
-            clasp redeploy "$DEPLOYMENT_ID" "$APPS_SCRIPT_VERSION" \
-              "StudySpace ${GITHUB_SHA}"
-          else
-            clasp deploy "$APPS_SCRIPT_VERSION" "StudySpace initial deployment"
-            echo "Copy the new deployment ID from the output."
-            echo "Save it as the APPS_SCRIPT_DEPLOYMENT_ID secret."
-          fi
+              if [ -n "$DEPLOYMENT_ID" ]; then
+                clasp create-deployment \
+                  --deploymentId "$DEPLOYMENT_ID" \
+                  --versionNumber "$APPS_SCRIPT_VERSION" \
+                  --description "StudySpace ${GITHUB_SHA}"
+              else
+                clasp create-deployment \
+                  --versionNumber "$APPS_SCRIPT_VERSION" \
+                  --description "StudySpace initial deployment ${GITHUB_SHA}"
+              fi
