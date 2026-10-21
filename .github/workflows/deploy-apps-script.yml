@@ -44,7 +44,7 @@ jobs:
           }
 
           printf '%s' "$CLASPRC_JSON" > "$HOME/.clasprc.json"
-          printf '%s' "$CLASP_JSON" > apps-script/.clasp.json
+          printf '%s' "$CLASPRC_JSON" | base64 --decode > "$HOME/.clasprc.json"
           chmod 600 "$HOME/.clasprc.json"
 
       - name: Push project and create version
