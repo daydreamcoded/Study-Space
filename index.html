@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f6fa">
+  <title>StudySpace</title>
+  <meta name="description" content="A calm, focused space to organize school assignments and due dates.">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="StudySpace home">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16M8 7h8M8 11h8"/></svg></span>
+        <span>StudySpace</span>
+      </a>
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="assignments"><span class="nav-icon">▤</span> Assignments</button>
+        <button class="nav-item" data-view="calendar"><span class="nav-icon">▦</span> Calendar</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-note">
+          <span class="note-icon">i</span>
+          <div><strong>Your space, your pace.</strong><p>Small steps add up.</p></div>
+        </div>
+        <p class="storage-note"><span class="status-dot"></span> Saved on this device</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Toggle navigation">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumbCurrent">Assignments</strong></div>
+        <div class="topbar-right"><span class="today-label" id="todayLabel"></span><span class="avatar">S</span></div>
+      </header>
+
+      <section class="view" id="assignmentsView">
+        <div class="page-heading">
+          <div><p class="eyebrow" id="greeting">YOUR OVERVIEW</p><h1>Assignments</h1><p class="subtitle">Keep track of what matters, one task at a time.</p></div>
+          <button class="primary-button" id="openAddModal"><span>＋</span> Add assignment</button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span>Total assignments</span><span class="stat-icon purple">▤</span></div><div class="stat-number" id="totalCount">0</div><div class="stat-caption">In your task list</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Due soon</span><span class="stat-icon amber">◷</span></div><div class="stat-number" id="dueCount">0</div><div class="stat-caption">Due today or tomorrow</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Completed</span><span class="stat-icon green">✓</span></div><div class="stat-number" id="completedCount">0</div><div class="stat-caption" id="completionCaption">Tasks finished</div></article>
+        </div>
+
+        <section class="panel assignments-panel">
+          <div class="panel-header"><div><h2>Your assignments</h2><p>Everything you need to keep moving.</p></div>
+            <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search assignments" aria-label="Search assignments"></label>
+          </div>
+          <div class="toolbar"><div class="filter-tabs" role="group" aria-label="Filter assignments">
+            <button class="filter-tab selected" data-filter="all">All</button><button class="filter-tab" data-filter="active">To do</button><button class="filter-tab" data-filter="completed">Completed</button>
+          </div><label class="sort-control">Sort by <select id="sortSelect"><option value="due">Due date</option><option value="created">Recently added</option><option value="priority">Priority</option></select></label></div>
+          <div id="assignmentList" class="assignment-list"></div>
+          <div class="empty-state" id="emptyState"><div class="empty-icon">▤</div><h3 id="emptyTitle">Your list is clear</h3><p id="emptyMessage">Add an assignment to start organizing your schoolwork.</p><button class="text-button" id="emptyAddButton">＋ Add your first assignment</button></div>
+        </section>
+        <p class="page-footnote">Your assignments are saved locally in this browser. <button class="text-button" id="exportButton">Export backup</button></p>
+      </section>
+
+      <section class="view hidden" id="calendarView">
+        <div class="page-heading">
+          <div><p class="eyebrow">PLAN AHEAD</p><h1>Calendar</h1><p class="subtitle">See your deadlines and plan the week ahead.</p></div>
+          <button class="primary-button" id="calendarAddButton"><span>＋</span> Add assignment</button>
+        </div>
+        <section class="panel calendar-panel">
+          <div class="calendar-header"><button class="icon-button" id="prevMonth" aria-label="Previous month">←</button><div><h2 id="monthTitle">Month Year</h2><p id="monthSubtitle">Your deadlines at a glance</p></div><button class="icon-button" id="nextMonth" aria-label="Next month">→</button><button class="secondary-button" id="todayButton">Today</button></div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </section>
+        <section class="panel selected-day-panel"><div class="panel-header"><div><h2 id="selectedDayTitle">Upcoming deadlines</h2><p id="selectedDaySubtitle">Choose a date to view its assignments.</p></div></div><div id="dayAssignments" class="day-assignment-list"></div></section>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="modalBackdrop" role="presentation">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header"><div><p class="eyebrow">STAY ORGANIZED</p><h2 id="modalTitle">Add assignment</h2></div><button class="icon-button" id="closeModal" aria-label="Close dialog">×</button></div>
+      <form id="assignmentForm">
+        <input type="hidden" id="editId">
+        <label class="field-label" for="taskTitle">Assignment name <span>*</span></label>
+        <input class="field-input" id="taskTitle" name="title" maxlength="120" placeholder="e.g. Biology chapter review" required>
+        <div class="form-row"><div><label class="field-label" for="taskSubject">Subject</label><input class="field-input" id="taskSubject" name="subject" maxlength="50" placeholder="e.g. Biology"></div><div><label class="field-label" for="taskDue">Due date <span>*</span></label><input class="field-input" id="taskDue" name="due" type="date" required></div></div>
+        <div class="form-row"><div><label class="field-label" for="taskPriority">Priority</label><select class="field-input" id="taskPriority" name="priority"><option value="medium">Medium</option><option value="high">High</option><option value="low">Low</option></select></div><div><label class="field-label" for="taskType">Type</label><select class="field-input" id="taskType" name="type"><option>Assignment</option><option>Quiz</option><option>Test</option><option>Project</option><option>Reading</option><option>Other</option></select></div></div>
+        <label class="field-label" for="taskNotes">Notes <span class="optional">(optional)</span></label><textarea class="field-input notes-input" id="taskNotes" name="notes" maxlength="500" placeholder="Add details, links, or reminders…"></textarea>
+        <div class="modal-actions"><button type="button" class="secondary-button" id="cancelModal">Cancel</button><button type="submit" class="primary-button" id="saveTaskButton">Save assignment</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
