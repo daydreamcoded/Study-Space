@@ -47,28 +47,36 @@ jobs:
           printf '%s' "$CLASPRC_JSON" | base64 --decode > "$HOME/.clasprc.json"
           chmod 600 "$HOME/.clasprc.json"
 
+
       - name: Push project and create version
         working-directory: apps-script
         run: |
           clasp push --force
-          clasp version "GitHub commit ${GITHUB_SHA}"
+          OUTPUT=$(clasp version "GitHub commit ${GITHUB_SHA}")
+          echo "$OUTPUT"
+          VERSION=$(printf '%s' "$OUTPUT" | grep -oE '[0-9]+' | tail -n 1)
+          test -n "$VERSION" || {
+            echo "Could not determine version number."
+            exit 1
+          }
+          echo "APPS_SCRIPT_VERSION=$VERSION" >> "$GITHUB_ENV"
+
 
       - name: Deploy web app
         working-directory: apps-script
         env:
           DEPLOYMENT_ID: ${{ secrets.APPS_SCRIPT_DEPLOYMENT_ID }}
         run: |
-          VERSION=$(clasp version | tail -n 1 | awk '{print $1}')
-          if [ -z "$VERSION" ]; then
+          if [ -z "$APPS_SCRIPT_VERSION" ]; then
             echo "Could not determine Apps Script version."
             exit 1
           fi
 
           if [ -n "$DEPLOYMENT_ID" ]; then
-            clasp redeploy "$DEPLOYMENT_ID" "$VERSION" \
+            clasp redeploy "$DEPLOYMENT_ID" "$APPS_SCRIPT_VERSION" \
               "StudySpace ${GITHUB_SHA}"
           else
-            clasp deploy "$VERSION" "StudySpace initial deployment"
+            clasp deploy "$APPS_SCRIPT_VERSION" "StudySpace initial deployment"
             echo "Copy the new deployment ID from the output."
             echo "Save it as the APPS_SCRIPT_DEPLOYMENT_ID secret."
           fi
