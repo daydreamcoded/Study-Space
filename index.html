@@ -22,31 +22,14 @@
       <nav class="main-nav" aria-label="Main navigation">
         <button class="nav-item active" data-view="assignments"><span class="nav-icon">▤</span> Assignments</button>
         <button class="nav-item" data-view="calendar"><span class="nav-icon">▦</span> Calendar</button>
-        ```html
-<nav class="main-nav" aria-label="Main navigation">
-  <button class="nav-item active" data-view="assignments">
-    <span class="nav-icon">▤</span> Assignments
-  </button>
-
-  <button class="nav-item" data-view="calendar">
-    <span class="nav-icon">▦</span> Calendar
-  </button>
-
-  <p class="nav-label tools-nav-label">STUDY TOOLS</p>
-
-  <button class="nav-item" data-view="focus">
-    <span class="nav-icon">◷</span> Focus Timer
-  </button>
-
-  <button class="nav-item" data-view="grades">
-    <span class="nav-icon">％</span> Grade Calculator
-  </button>
-</nav>
-```
+        <p class="nav-label tools-nav-label">STUDY TOOLS</p>
+        <button class="nav-item" data-view="focus"><span class="nav-icon">◷</span> Focus timer</button>
+        <button class="nav-item" data-view="grades"><span class="nav-icon">％</span> Grade calculator</button>
+        <button class="nav-item" data-view="flashcards"><span class="nav-icon">▣</span> Flashcards</button>
+        <button class="nav-item" data-view="notes"><span class="nav-icon">✎</span> Notes</button>
+        <button class="nav-item" data-view="checklist"><span class="nav-icon">☑</span> Quick checklist</button>
+        <button class="nav-item" data-view="rewards"><span class="nav-icon">✧</span> Progress & rewards</button>
       </nav>
-      <p class="nav-label tools-nav-label">STUDY TOOLS</p>
-<button class="nav-item" data-view="focus"><span class="nav-icon">◷</span> Focus Timer</button>
-<button class="nav-item" data-view="grades"><span class="nav-icon">％</span> Grade Calculator</button>
       <div class="sidebar-bottom">
         <div class="sidebar-note">
           <span class="note-icon">i</span>
@@ -98,6 +81,45 @@
           <div class="calendar-grid" id="calendarGrid"></div>
         </section>
         <section class="panel selected-day-panel"><div class="panel-header"><div><h2 id="selectedDayTitle">Upcoming deadlines</h2><p id="selectedDaySubtitle">Choose a date to view its assignments.</p></div></div><div id="dayAssignments" class="day-assignment-list"></div></section>
+      </section>
+
+      <section class="view hidden" id="focusView">
+        <div class="page-heading"><div><p class="eyebrow">FOCUS ON ONE THING</p><h1>Focus timer</h1><p class="subtitle">A little focused time adds up.</p></div></div>
+        <section class="panel focus-panel">
+          <div class="focus-mode-tabs" role="group" aria-label="Choose timer duration">
+            <button class="filter-tab selected" type="button" data-minutes="25">Focus · 25 min</button><button class="filter-tab" type="button" data-minutes="5" data-break="true">Short break · 5 min</button><button class="filter-tab" type="button" data-minutes="15" data-break="true">Long break · 15 min</button>
+          </div>
+          <div class="timer-face"><div class="timer-ring"><svg viewBox="0 0 220 220" aria-hidden="true"><circle class="timer-track" cx="110" cy="110" r="99"></circle><circle class="timer-progress" id="timerProgress" cx="110" cy="110" r="99"></circle></svg><div class="timer-readout"><span id="timerDisplay">25:00</span><small id="timerStatus">READY WHEN YOU ARE</small></div></div></div>
+          <div class="timer-controls"><button class="primary-button" id="timerStart" type="button">▶ Start focus</button><button class="secondary-button" id="timerReset" type="button">↺ Reset</button></div><p class="timer-hint">Choose a session and focus on one thing at a time.</p>
+        </section>
+      </section>
+      <section class="view hidden" id="gradesView">
+        <div class="page-heading"><div><p class="eyebrow">KNOW WHERE YOU STAND</p><h1>Grade calculator</h1><p class="subtitle">Add scores to calculate your points-based average.</p></div></div>
+        <section class="panel grade-panel"><div class="panel-header"><div><h2>Your grades</h2><p>Only rows with valid scores count toward the total.</p></div><button class="primary-button" id="addGradeRow" type="button">＋ Add row</button></div>
+          <div class="grade-summary"><div><span>Points earned</span><strong id="earnedTotal">0</strong></div><div><span>Points possible</span><strong id="possibleTotal">0</strong></div><div><span>Overall grade</span><strong id="gradePercent">—%</strong><small id="letterGrade" class="grade-result"></small></div></div>
+          <div class="grade-table-wrap"><table class="grade-table"><thead><tr><th>Assignment</th><th>Earned</th><th>Possible</th><th><span class="sr-only">Remove</span></th></tr></thead><tbody id="gradeRows"></tbody></table></div>
+          <div class="grade-actions"><button class="secondary-button" id="clearGrades" type="button">Clear entries</button></div><p class="grade-note">This is a total-points calculator, not a weighted-category calculator. Scores above the possible points are excluded until corrected.</p>
+        </section>
+      </section>
+      <section class="view hidden" id="flashcardsView">
+        <div class="page-heading"><div><p class="eyebrow">ACTIVE RECALL</p><h1>Flashcards</h1><p class="subtitle">Make a deck, then test what you remember.</p></div></div>
+        <section class="panel tool-panel"><form id="flashcardForm" class="tool-form"><label class="field-label" for="flashFront">Front / question</label><textarea id="flashFront" class="field-input" rows="2" maxlength="500" required placeholder="What do you want to remember?"></textarea><label class="field-label" for="flashBack">Back / answer</label><textarea id="flashBack" class="field-input" rows="2" maxlength="1000" required placeholder="Write the answer here…"></textarea><button class="primary-button" type="submit">＋ Add flashcard</button></form>
+          <div class="flash-study"><div class="flash-count" id="flashCount">0 cards</div><button class="flash-card" id="flashCard" type="button" aria-label="Reveal flashcard answer"><span class="flash-side-label" id="flashSideLabel">YOUR DECK</span><strong id="flashFace">Add a card to begin</strong><small id="flashFlipHint">Your cards will appear here.</small></button><div class="tool-actions"><button class="secondary-button" id="flashPrev" type="button">← Previous</button><button class="secondary-button" id="flashFlip" type="button">Flip card</button><button class="secondary-button" id="flashNext" type="button">Next →</button></div></div>
+          <div class="saved-list" id="flashList"></div>
+        </section>
+      </section>
+      <section class="view hidden" id="notesView">
+        <div class="page-heading"><div><p class="eyebrow">YOUR STUDY SPACE</p><h1>Notes</h1><p class="subtitle">A simple scratchpad that saves as you type.</p></div></div>
+        <section class="panel tool-panel"><label class="field-label" for="notesTitle">Note title</label><input class="field-input" id="notesTitle" maxlength="100" placeholder="e.g. Biology — cell theory"><label class="field-label" for="notesBody">Your notes</label><textarea class="field-input notes-editor" id="notesBody" rows="14" maxlength="30000" placeholder="Write your notes, reminders, ideas, or review questions…"></textarea><div class="notes-footer"><span id="notesStatus" role="status">Saved on this device</span><button class="secondary-button" id="clearNotes" type="button">Clear note</button></div></section>
+      </section>
+      <section class="view hidden" id="checklistView">
+        <div class="page-heading"><div><p class="eyebrow">SMALL STEPS COUNT</p><h1>Quick checklist</h1><p class="subtitle">Capture little tasks without adding a full assignment.</p></div></div>
+        <section class="panel tool-panel"><form id="checkForm" class="inline-form"><input class="field-input" id="checkInput" maxlength="180" required placeholder="e.g. Pack calculator for school"><button class="primary-button" type="submit">＋ Add</button></form><div class="check-progress"><div class="progress-track"><span id="checkProgressBar"></span></div><span id="checkProgressText">0 of 0 complete</span></div><div class="saved-list" id="checkList"></div><button class="secondary-button" id="clearDoneChecks" type="button">Clear completed</button></section>
+      </section>
+      <section class="view hidden" id="rewardsView">
+        <div class="page-heading"><div><p class="eyebrow">PROGRESS, NOT PERFECTION</p><h1>Progress & rewards</h1><p class="subtitle">Celebrate the work you actually do.</p></div></div>
+        <section class="stats-grid rewards-grid"><article class="stat-card"><div class="stat-top"><span>Study points</span><span class="stat-icon purple">✧</span></div><div class="stat-number" id="rewardPoints">0</div><div class="stat-caption">Earn 10 per completed focus session</div></article><article class="stat-card"><div class="stat-top"><span>Focus sessions</span><span class="stat-icon amber">◷</span></div><div class="stat-number" id="rewardSessions">0</div><div class="stat-caption">Sessions completed on this device</div></article><article class="stat-card"><div class="stat-top"><span>Active days</span><span class="stat-icon green">✓</span></div><div class="stat-number" id="rewardDays">0</div><div class="stat-caption">Different days you studied</div></article></section>
+        <section class="panel tool-panel"><div class="panel-header"><div><h2>Your milestones</h2><p>Points come from completed focus sessions, not time spent staring at a screen.</p></div></div><div id="rewardMilestones" class="milestones"></div><p class="grade-note">Progress and points stay in this browser. They are encouragement, not a grade or a competition.</p></section>
       </section>
     </main>
   </div>

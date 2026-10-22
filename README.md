@@ -1,29 +1,26 @@
-# StudySpace — GitHub Pages edition
+# StudySpace — student planner
 
-A responsive school-planning website built with plain HTML, CSS, and JavaScript. It includes assignments, due dates, filters, priorities, a monthly calendar, and JSON backup export.
+A responsive school-planning website built with plain HTML, CSS, and JavaScript. The existing assignments, monthly calendar, muted-lavender design, and assignment `localStorage` key are preserved.
+
+## Features
+- Assignments: add/edit/delete, due dates, subjects, priorities, filters, search, and JSON backup export.
+- Calendar: monthly deadlines view and selected-day assignment list.
+- Focus timer: 25-minute focus, 5-minute short break, 15-minute long break; pause/resume/reset.
+- Grade calculator: points earned/possible, overall percentage, and letter grade.
+- Flashcards: create, flip, browse, and delete cards.
+- Notes: a local autosaving scratchpad.
+- Quick checklist: lightweight tasks separate from assignments.
+- Progress & rewards: points, focus-session count, active study days, and milestones.
 
 ## Files
-- `index.html` — page structure
-- `styles.css` — responsive styling
-- `app.js` — assignment and calendar behavior
+- `index.html` — page structure and views
+- `styles.css` — original styling
+- `app.js` — existing assignment/calendar behavior and shared navigation
+- `study-tools.css` — additional study-tool styling
+- `study-tools.js` — timer, grades, flashcards, notes, checklist, rewards
 
-## Run locally
-Open `index.html` in a modern browser. For a more realistic local setup, use VS Code's Live Server extension.
+## Run locally / publish
+Open `index.html` in a modern browser, or upload all five app files plus this README to the root of the existing GitHub repository. For GitHub Pages, open **Settings → Pages**, choose **Deploy from a branch**, select `main` and `/(root)`, and save.
 
-## Publish with GitHub Pages
-1. Sign in at https://github.com/ and create a **new public repository** named `StudySpace` (or another name you prefer).
-2. Choose **Add file → Upload files**.
-3. Upload `index.html`, `styles.css`, `app.js`, and `README.md` from this folder. Ensure `index.html` is at the repository root, not inside another folder.
-4. Commit the files to the `main` branch.
-5. Open the repository's **Settings → Pages**.
-6. Under **Build and deployment**, choose **Deploy from a branch**.
-7. Select branch `main` and folder `/(root)`, then click **Save**.
-8. Wait a minute or two and refresh the Pages settings. GitHub will show the published URL, usually `https://YOUR-USERNAME.github.io/StudySpace/`.
-9. Open that URL and test adding, editing, completing, and deleting an assignment.
-
-## Data and privacy
-- Assignments are saved in the browser's `localStorage` on the device/browser where you use the app.
-- This version has no login, cloud sync, or shared database. Your assignments won't automatically appear on another device or in another browser.
-- Clearing browser data may erase assignments. Use **Export backup** occasionally to download a JSON backup.
-- The repository contains the website code, not the assignments stored in your browser. Avoid putting private school or personal information into a public repository.
-- The Google Fonts import is optional; if fonts are blocked or unavailable, the page falls back to system sans-serif fonts.
+## Local storage and privacy
+Assignments continue to use `studyspace.assignments.v1` and are not migrated or cleared by these additions. The new tools use separate keys: `studyspace.grades.v1`, `studyspace.flashcards.v1`, `studyspace.notes.v1`, `studyspace.checklist.v1`, and `studyspace.progress.v1`. Data is stored only in the browser/device where the site is used; it does not sync between devices. Clearing browser data can remove it, so use **Export backup** for assignment backups. Do not put private information into a public repository.

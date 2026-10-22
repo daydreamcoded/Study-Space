@@ -101,11 +101,13 @@
     }
   }
   function switchView(view) {
+    const validViews = ["assignments", "calendar", "focus", "grades", "flashcards", "notes", "checklist", "rewards"];
+    if (!validViews.includes(view)) return;
     currentView = view;
-    els.assignmentsView.classList.toggle("hidden",view!=="assignments");
-    els.calendarView.classList.toggle("hidden",view!=="calendar");
-    els.breadcrumb.textContent = view==="calendar" ? "Calendar" : "Assignments";
-    document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+    validViews.forEach(name => { const section = $(name + "View"); if (section) section.classList.toggle("hidden", name !== view); });
+    const labels = {assignments:"Assignments", calendar:"Calendar", focus:"Focus timer", grades:"Grade calculator", flashcards:"Flashcards", notes:"Notes", checklist:"Quick checklist", rewards:"Progress & rewards"};
+    els.breadcrumb.textContent = labels[view] || "Workspace";
+    document.querySelectorAll(".nav-item[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
     $("sidebar").classList.remove("open");
     if (view==="calendar") renderCalendar();
   }
