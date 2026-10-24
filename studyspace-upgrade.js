@@ -8,6 +8,8 @@
   const DNA_KEY = "studyspace.studyDNA.v1";
   const PROFILE_KEY = "studyspace.profile.v1";
   const PROGRESS_KEY = "studyspace.progress.v1";
+  // Set this to your own secure server endpoint after backend setup. Never put an AI API key in this file.
+  const AI_CHAT_ENDPOINT = "";
 
   const themes = {
     navy: {
@@ -127,12 +129,17 @@
     if (assignmentNav) assignmentNav.innerHTML = '<span class="nav-icon">▤</span> Workspace';
     const oldThemeNav = nav.querySelector('[data-view="settings"]');
     if (oldThemeNav) oldThemeNav.remove();
+    const rewardsNav = nav.querySelector('[data-view="rewards"]');
+    if (rewardsNav) rewardsNav.remove();
+    const rewardsView = document.getElementById('rewardsView');
+    if (rewardsView) rewardsView.remove();
     if ($("settingsView")) $("settingsView").remove();
 
     nav.insertBefore(buildNavButton("home", "Home", "⌂"), nav.firstChild);
     nav.appendChild(buildNavButton("theme", "Theme Studio", "✦"));
     nav.appendChild(buildNavButton("dna", "Study DNA", "◎"));
-    nav.appendChild(buildNavButton("account", "Account & Calendar", "↗"));
+    nav.appendChild(buildNavButton("chat", "Mini Motivator AI", "✦"));
+    nav.appendChild(buildNavButton("account", "Sign in", "↗"));
 
     addView("home", `
       <div class="page-heading"><div><p class="eyebrow">YOUR SPACE, YOUR PACE</p><h1>Welcome to StudySpace</h1><p class="subtitle">A calmer place to plan, focus, and make progress.</p></div><button class="primary-button" type="button" data-go-workspace>Open workspace →</button></div>
@@ -147,6 +154,16 @@
         <section class="panel upgrade-upcoming"><div class="panel-header"><div><h2>Coming up</h2><p>Your next unfinished deadlines.</p></div><button class="text-button" type="button" data-go-workspace>All assignments →</button></div><div id="upgradeUpcomingList" class="upgrade-upcoming-list"></div></section>
       </div>
       <div class="upgrade-cat-note" role="status"><span class="upgrade-cat-small">${cat}</span><p id="upgradeCatMessage">${catMessages[0]}</p><button type="button" class="secondary-button" id="upgradeCatNext">Another reminder</button></div>
+    `);
+    addView("chat", `
+      <div class="page-heading"><div><p class="eyebrow">YOUR STUDY SIDEKICK</p><h1>Mini Motivator AI</h1><p class="subtitle">Ask for help planning, understanding notes, breaking down assignments, or getting unstuck.</p></div></div>
+      <section class="panel ai-chat-panel">
+        <div class="ai-chat-heading"><div class="ai-avatar">✦</div><div><h2>Mini Motivator</h2><p>Study coach · supportive, practical, judgment-free</p></div><span class="ai-status">AI setup needed</span></div>
+        <div class="ai-setup-banner" id="upgradeAiSetup"><strong>One setup step is still needed</strong><p>This page is hosted on GitHub Pages, so it cannot safely keep an AI provider key by itself. To make this a real AI chatbot, we need to connect a secure backend. The chat interface is ready, but it won't pretend to be AI until that connection is configured.</p></div>
+        <div class="ai-chat-messages" id="upgradeChatMessages" aria-live="polite"><div class="ai-message assistant"><strong>Mini Motivator</strong><p>Hi! Once my secure AI connection is set up, you’ll be able to talk with me here about school, study plans, notes, and motivation.</p></div></div>
+        <form class="ai-chat-form" id="upgradeChatForm"><label class="sr-only" for="upgradeChatInput">Message Mini Motivator</label><textarea id="upgradeChatInput" rows="2" placeholder="Tell me what you're working on…" required></textarea><button class="primary-button" type="submit">Send ↗</button></form>
+        <p class="ai-chat-footnote">Don't enter passwords, private account details, or other sensitive information.</p>
+      </section>
     `);
     addView("theme", `
       <div class="page-heading"><div><p class="eyebrow">MAKE IT YOURS</p><h1>Theme Studio</h1><p class="subtitle">Choose a whole look—not just a pink background.</p></div></div>
@@ -169,11 +186,12 @@
       </section>
     `);
     addView("account", `
-      <div class="page-heading"><div><p class="eyebrow">YOUR ACCOUNT</p><h1>Login & Calendar</h1><p class="subtitle">Prepare your account options and bring assignment deadlines into your calendar.</p></div></div>
-      <section class="panel upgrade-account-grid">
-        <div class="upgrade-account-card"><h2>Email & password login</h2><p>Real accounts need a secure authentication provider and project configuration. This static GitHub Pages site cannot securely create accounts by itself, so the login form is intentionally not collecting passwords yet.</p><div class="upgrade-setup-note"><strong>Account setup required</strong><span>Once Firebase Authentication or another secure provider is configured, this can become real sign-in and cross-device sync.</span></div></div>
-        <div class="upgrade-account-card"><h2>Calendar export</h2><p>Export unfinished assignments with due dates as a calendar file, then import it into Google Calendar or Apple Calendar.</p><button class="primary-button" type="button" id="upgradeExportCalendar">Export assignments (.ics)</button><p class="upgrade-small-note">This is a one-way export. Automatic two-way syncing needs calendar permissions and a secure backend.</p><div id="upgradeCalendarStatus" role="status" class="theme-status"></div></div>
+      <div class="page-heading"><div><p class="eyebrow">YOUR ACCOUNT</p><h1>Sign in</h1><p class="subtitle">Sign-in belongs here. Account creation and Google sign-in need secure provider setup before they can work.</p></div></div>
+      <section class="panel sign-in-panel"><div class="sign-in-mark">S</div><h2>Welcome back to StudySpace</h2><p class="sign-in-intro">Sign in with your own account once authentication is connected.</p>
+        <div class="sign-in-options"><button type="button" class="secondary-button" id="upgradeGoogleSignIn" disabled>Continue with Google · setup required</button><label>Email address<input type="email" autocomplete="email" placeholder="you@example.com" disabled></label><label>Password<input type="password" autocomplete="current-password" placeholder="Set up secure sign-in first" disabled></label><button type="button" class="primary-button" disabled>Sign in · setup required</button><p class="upgrade-small-note">These controls are intentionally disabled until authentication is configured. This prevents the site from collecting a password insecurely.</p></div>
+        <div class="upgrade-setup-note"><strong>Why isn't it working yet?</strong><span>GitHub Pages is a static website. Real email/password and Google sign-in need an authentication provider (such as Firebase Authentication) and its project configuration. I won't store your password in browser code.</span></div>
       </section>
+      <section class="panel upgrade-account-card calendar-card"><h2>Calendar export</h2><p>Export unfinished assignments with due dates, then import the file into Google Calendar or Apple Calendar.</p><button class="primary-button" type="button" id="upgradeExportCalendar">Export assignments (.ics)</button><p class="upgrade-small-note">This is a one-way export. Automatic two-way sync needs calendar permissions and a secure backend.</p><div id="upgradeCalendarStatus" role="status" class="theme-status"></div></section>
       <section class="panel upgrade-account-card upgrade-backup"><h2>Your data stays yours</h2><p>Assignments remain in your existing browser storage. Export your current backup from Workspace before changing devices or browsers.</p><button type="button" class="secondary-button" data-go-workspace>Open Workspace</button></section>
     `);
     bindUpgradeControls();
@@ -191,7 +209,7 @@
     });
     document.querySelectorAll(".nav-item").forEach(b => b.classList.toggle("active", b.dataset.upgradeView === id || (!b.dataset.upgradeView && b.dataset.view === (id === "workspace" ? "assignments" : id))));
     const crumb = $("breadcrumbCurrent");
-    const labels = {home:"Home",workspace:"Workspace",calendar:"Calendar",focus:"Focus timer",grades:"Grade calculator",flashcards:"Flashcards",notes:"Notes",checklist:"Quick checklist",rewards:"Progress & rewards",theme:"Theme Studio",dna:"Study DNA",account:"Account & Calendar",assignments:"Workspace"};
+    const labels = {home:"Home",workspace:"Workspace",calendar:"Calendar",focus:"Focus timer",grades:"Grade calculator",flashcards:"Flashcards",notes:"Notes",checklist:"Quick checklist",theme:"Theme Studio",dna:"Study DNA",account:"Account & Calendar",assignments:"Workspace"};
     if (crumb) crumb.textContent = labels[id] || "StudySpace";
     const sidebar = $("sidebar"); if (sidebar) sidebar.classList.remove("open");
     if (id === "home") renderHome();
@@ -259,6 +277,35 @@
     });
     const exportBtn = $("upgradeExportCalendar");
     if (exportBtn) exportBtn.addEventListener("click", exportCalendar);
+    const chatForm = $("upgradeChatForm");
+    if (chatForm) chatForm.addEventListener("submit", sendChatMessage);
+  }
+
+  function addChatBubble(role, text) {
+    const messages = $("upgradeChatMessages"); if (!messages) return;
+    const bubble = document.createElement("div"); bubble.className = `ai-message ${role}`;
+    const heading = document.createElement("strong"); heading.textContent = role === "user" ? "You" : "Mini Motivator";
+    const body = document.createElement("p"); body.textContent = text;
+    bubble.append(heading, body); messages.appendChild(bubble); messages.scrollTop = messages.scrollHeight;
+  }
+  async function sendChatMessage(e) {
+    e.preventDefault();
+    const input = $("upgradeChatInput"); if (!input || !input.value.trim()) return;
+    const message = input.value.trim(); input.value = ""; addChatBubble("user", message);
+    if (!AI_CHAT_ENDPOINT) {
+      addChatBubble("assistant", "I’m not connected to an AI service yet, so I can’t generate a real answer here. The next step is setting up a secure backend endpoint—never put an AI API key in the website’s JavaScript. Once connected, this chat can respond to your messages.");
+      return;
+    }
+    const send = chatForm.querySelector('button[type="submit"]'); if (send) { send.disabled = true; send.textContent = "Thinking…"; }
+    try {
+      const response = await fetch(AI_CHAT_ENDPOINT, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message, history:Array.from($("upgradeChatMessages").querySelectorAll(".ai-message")).slice(-12).map(el=>({role:el.classList.contains("user")?"user":"assistant",content:el.querySelector("p")?.textContent||""}))})});
+      if (!response.ok) throw new Error("AI service returned an error");
+      const data = await response.json();
+      const answer = data.reply || data.message || data.output;
+      if (typeof answer !== "string" || !answer.trim()) throw new Error("No reply was returned");
+      addChatBubble("assistant", answer);
+    } catch (_) { addChatBubble("assistant", "I couldn't reach the AI service just now. Check that the secure backend is online and configured, then try again."); }
+    finally { if (send) { send.disabled = false; send.textContent = "Send ↗"; } }
   }
 
   function icsEscape(value) { return String(value ?? "").replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n"); }
@@ -288,6 +335,7 @@
         e.preventDefault(); e.stopImmediatePropagation(); goView("workspace"); return;
       }
       if (!custom) return;
+      if (custom.dataset.upgradeView === "rewards") { e.preventDefault(); e.stopImmediatePropagation(); return; }
       e.preventDefault(); e.stopImmediatePropagation();
       goView(custom.dataset.upgradeView);
       if (custom.dataset.upgradeView === "dna") renderDNA();
@@ -296,6 +344,7 @@
     document.addEventListener("click", e => {
       const nav = e.target.closest(".nav-item[data-view]");
       if (!nav) return;
+      if (nav.dataset.view === "rewards") { e.preventDefault(); e.stopImmediatePropagation(); return; }
       const view = nav.dataset.view === "assignments" ? "workspace" : nav.dataset.view;
       e.preventDefault();
       e.stopImmediatePropagation();

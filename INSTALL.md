@@ -1,47 +1,27 @@
-# StudySpace Coordinated Update Pack v2
+# StudySpace update pack v3
 
-## Install
-
-1. Download and unzip `studyspace-update-pack-v2.zip`.
-2. Open your repository: https://github.com/daydreamcoded/Study-Space
-3. Upload `studyspace-upgrade.js` and `studyspace-upgrade.css` to the repository's **root** (same level as `index.html`).
-4. Open `index.html` and choose the pencil/edit button.
-5. In the `<head>` section, find the existing script lines:
-
-   ```html
-   <script src="theme-studio.js" defer></script>
-   ```
-
-   Add these two lines immediately after it:
+## Install the updated files
+1. Download and unzip `studyspace-update-pack-v3.zip`.
+2. Open https://github.com/daydreamcoded/Study-Space.
+3. Upload `studyspace-upgrade.js` and `studyspace-upgrade.css` to the repository root, replacing the older files with the same names. Do not delete your existing app files.
+4. In `index.html`, inside `<head>` and before `</head>`, make sure these lines appear after `theme-studio.js`:
 
    ```html
    <link rel="stylesheet" href="studyspace-upgrade.css">
    <script src="studyspace-upgrade.js" defer></script>
    ```
+5. Commit to `main`, wait a minute, then refresh https://daydreamcoded.github.io/Study-Space/.
 
-6. Commit the changes to the `main` branch.
-7. Wait a minute, then open https://daydreamcoded.github.io/Study-Space/ and refresh. If the old version remains, do a hard refresh.
+## What this revision changes
+- Adds a dedicated Mini Motivator AI chat screen and a chat interface that can call a configured secure backend.
+- Removes the Rewards page from navigation and removes its view.
+- Makes Theme Studio treatments change layout details, textures, borders, typography, shadows, and decorative styling—not only colors. Popstar Y2K has retro dot patterns, glossy card treatment, and star/heart details.
+- Makes Sign in visible in navigation and gives it a dedicated sign-in screen.
+- Keeps assignment/calendar export and Study DNA features.
 
-## Included
+## Important: two features need secure setup before they truly work
+**AI chatbot:** GitHub Pages is static hosting. A real AI assistant needs a server/backend endpoint. The frontend intentionally has a blank `AI_CHAT_ENDPOINT` setting and will clearly say it is not connected; it will not fake AI responses. Never put an OpenAI or other AI API key in browser JavaScript. Configure a secure backend endpoint first, then set `AI_CHAT_ENDPOINT` to that endpoint. The endpoint should accept JSON `{ "message": "...", "history": [] }` and return JSON `{ "reply": "..." }`.
 
-- Redesigned Home dashboard with assignment counts and upcoming due dates
-- StudySpace streak on Home
-- Mini Motivator cream cartoon cat
-- Expanded Theme Studio: Midnight Navy, Popstar Y2K, Rosewater, Slate & Steel,
-  Oat & Olive, and After Hours
-- Study DNA preference quiz with editable saved answers and personalized suggestions
-- `.ics` calendar export for unfinished assignments with due dates
+**Sign in:** The page is now visible, but email/password and Google sign-in remain disabled until an authentication provider such as Firebase Authentication is configured. Do not collect passwords in plain browser code or localStorage.
 
-## Data safety
-
-The pack does not replace your existing `index.html`, `styles.css`, `app.js`, `study-tools.js`,
-`study-tools.css`, or `theme-studio.js`. It reads assignments from the existing
-`studyspace.assignments.v1` localStorage key and does not rewrite that data.
-
-## Honest limitations
-
-- The account page does **not** collect passwords or create accounts. Real email/password login
-  requires a configured authentication provider such as Firebase Authentication.
-- Calendar support is a one-way `.ics` export. Import the file into Google Calendar or Apple
-  Calendar. Automatic two-way sync requires OAuth/calendar permissions and a secure backend.
-- Theme selection and Study DNA preferences save locally in the current browser.
+Calendar export is one-way `.ics` export; automatic Google/Apple calendar sync requires OAuth and backend setup. Theme and Study DNA choices are stored locally in this browser.
